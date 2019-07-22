@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const User = require('../lib/models/User');
+const Post = require('../lib/models/Post');
+
 
 describe('post routes', () => {
   beforeAll(() => {
@@ -19,8 +21,8 @@ describe('post routes', () => {
   beforeEach(async() => {
     const user = await User.create({
       username: 'lalall',
-        password: 'wkejrnwkejrn',
-        profilePhotoUrl: 'hebrjwhebwjebr'
+      password: 'wkejrnwkejrn',
+      profilePhotoUrl: 'hebrjwhebwjebr'
     });
     return agent 
       .post('/api/v1/auth/signin')
@@ -48,5 +50,23 @@ describe('post routes', () => {
           __v: 0
         });
       });
+    });
+    
+  it('can get all posts', () => {
+    return agent
+    .post('/api/v1/posts')
+    .send({ photoUrl: 'somePhoto', caption: 'someCaption', tags: ['cool', 'dog', 'blessed' ]})
+    .then(res => {
+      return agent
+        .get('/api/v1/posts')
+    })
+      .then(res => {
+        expect(res.body).toEqual([{
+          user: expect.any(String),
+          photoUrl: 'somePhoto',
+          caption: 'someCaption',
+          tags: ['cool', 'dog', 'blessed'],
+        }])
+      })
   });
 });
