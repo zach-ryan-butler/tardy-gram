@@ -61,4 +61,33 @@ describe('app routes', () => {
         })
       })
   });
+  
+  it('can verify a user with a token', async() => {
+    const user = await User.create({
+      username: 'lalall',
+        password: 'wkejrnwkejrn',
+        profilePhotoUrl: 'hebrjwhebwjebr'
+    });
+    const agent = request.agent(app);
+    return agent 
+      .post('/api/v1/auth/signin')
+      .send({
+        username: 'lalall',
+        password: 'wkejrnwkejrn',
+      })
+      .then(res => {
+        return agent
+          .get('/api/v1/auth/verify')
+      })
+      .then(res => {
+        console.log(res.body);
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          username: 'lalall',
+          passwordHash: expect.any(String),
+          profilePhotoUrl: 'hebrjwhebwjebr',
+          __v: 0
+        })
+      })
+  })
 });
