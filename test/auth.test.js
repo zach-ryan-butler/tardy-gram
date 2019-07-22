@@ -31,9 +31,7 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           username: 'lalall',
-          passwordHash: expect.any(String),
-          profilePhotoUrl: 'hebrjwhebwjebr',
-          __v: 0
+          profilePhotoUrl: 'hebrjwhebwjebr'
         })
       })
   });
@@ -55,9 +53,7 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           username: 'lalall',
-          passwordHash: expect.any(String),
-          profilePhotoUrl: 'hebrjwhebwjebr',
-          __v: 0
+          profilePhotoUrl: 'hebrjwhebwjebr'
         })
       })
   });
@@ -80,13 +76,10 @@ describe('app routes', () => {
           .get('/api/v1/auth/verify')
       })
       .then(res => {
-        console.log(res.body);
         expect(res.body).toEqual({
           _id: expect.any(String),
           username: 'lalall',
-          passwordHash: expect.any(String),
-          profilePhotoUrl: 'hebrjwhebwjebr',
-          __v: 0
+          profilePhotoUrl: 'hebrjwhebwjebr'
         })
       })
   })
