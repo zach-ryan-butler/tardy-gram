@@ -16,10 +16,10 @@ describe('post routes', () => {
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
   });
-
+ let user = null;
   const agent = request.agent(app);
   beforeEach(async() => {
-    const user = await User.create({
+      user = await User.create({
       username: 'lalall',
       password: 'wkejrnwkejrn',
       profilePhotoUrl: 'hebrjwhebwjebr'
@@ -66,7 +66,33 @@ describe('post routes', () => {
           photoUrl: 'somePhoto',
           caption: 'someCaption',
           tags: ['cool', 'dog', 'blessed'],
-        }])
-      })
+        }]);
+      });
+  });
+
+  it('can get posts by id', async() => {
+    const posts = await Post.create({
+      user: user._id,
+      photoUrl: 'Some Photo',
+      caption: 'Some Caption',
+      tags: ['color', 'dog', 'blessed']
+    });
+
+    return agent
+      .get(`/api/v1/posts/${posts._id}`)
+      .then(res => {
+        console.log(res.body)
+        expect(res.body).toEqual({
+          user: {
+            username: user.username,
+            profilePhotoUrl: user.profilePhotoUrl,
+            _id: expect.any(String)
+          },
+          photoUrl: posts.photoUrl,
+          caption: posts.caption,
+          tags: [...posts.tags],
+          _id: expect.any(String)
+        });
+      });
   });
 });
