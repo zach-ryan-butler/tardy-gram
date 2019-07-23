@@ -81,7 +81,6 @@ describe('post routes', () => {
     return agent
       .get(`/api/v1/posts/${posts._id}`)
       .then(res => {
-        console.log(res.body)
         expect(res.body).toEqual({
           user: {
             username: user.username,
@@ -95,4 +94,25 @@ describe('post routes', () => {
         });
       });
   });
+
+  it('patches a post by id', async() => {
+    const posts = await Post.create({
+      user: user._id,
+      photoUrl: 'Some Photo',
+      caption: 'Some Caption',
+      tags: ['color', 'dog', 'blessed']
+    });
+    return agent
+      .patch(`/api/v1/posts/${posts._id}`)
+      .send({ caption: 'New Caption' })
+      .then(res => {
+        expect(res.body).toEqual({
+          user: user._id.toString(),
+          photoUrl: posts.photoUrl,
+          caption: 'New Caption',
+          tags: [...posts.tags], 
+          _id: expect.any(String)
+        })
+      })
+  })
 });
